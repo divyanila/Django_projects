@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+  /* Always set the map height explicitly to define the size of the div
+ * element that contains the map. */
+#map {
+  height: 100%;
+}
+/* Optional: Makes the sample page fill the window. */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}</style>
+</head>
+<body>
+  <div id="map"></div>
+<!-- Replace the value of the key parameter with your own API key. -->
+<script src="https://maps.google.com/maps/api/js?key=AIzaSyDrZT29N0YiJfKxHM467Ev-EgDURuse9t8&callback=initMap"
+         async defer></script>
+<script>
+  // This example requires the Geometry library. Include the libraries=geometry
+// parameter when you first load the API. For example:
+// <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=geometry">
+
+function initMap() {
+  var map = new google.maps.Map(document.getElementById('map'), {
+    center: {lat: 12.976598, lng: 77.595183},
+    zoom: 9,
+  });
+
+  var triangleCoords = [
+    {lat: 12.926598, lng: 77.545183},
+    {lat: 12.976598, lng: 77.4082768},
+    {lat: 13.026598, lng: 77.645183},
+    {lat: 12.976598, lng: 77.595183},
+  
+  ];
+
+  var bermudaTriangle = new google.maps.Polygon({
+    paths: triangleCoords,
+    strokeColor: '#FF0000',
+    strokeOpacity: 0.2,
+    strokeWeight: 2,
+    fillColor: '#00ff00',
+    fillOpacity: 0,
+  });
+  const bb = [ 48.7998602295,48.8198640442,2.46138595581,2.48138619423]
+  const p = {'x':48.8198640402, 'y':2.46138595508}
+  console.log(p.x)
+  console.log(p.y)
+  console.log(bb[0])
+  console.log(bb[1])
+  if( bb[2] <= p.x && p.x <= bb[0] && bb[3] <= p.y && p.y <= bb[1] ) {
+    // Point is in bounding box
+    console.log("piijijii")
+}
+  bermudaTriangle.setMap(map);
+  var latlng = {lat: 12.82345, lng: 77.7083592 }
+  google.maps.event.addListener(map, 'click', function(e) {
+    console.log(e.latLng)
+    var resultColor =
+        google.maps.geometry.poly.containsLocation(e.latLng, bermudaTriangle) ?
+        'black' :
+        'green';
+    
+    if(google.maps.geometry.poly.containsLocation(e.latLng, bermudaTriangle)) {
+      alert('inside the city');
+      console.log("inside the city")
+    }
+
+    new google.maps.Marker({
+      position: e.latLng,
+      map: map,
+      icon: {
+        path: google.maps.SymbolPath.CIRCLE,
+        fillColor: resultColor,
+        fillOpacity: .5,
+        strokeColor: 'black',
+        strokeWeight: .8,
+        scale: 10
+      }
+    });
+  });
+}
+</script>
+</body>
+</html>
